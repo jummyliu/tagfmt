@@ -10,23 +10,22 @@ It uses blanks for alignment. tag must be in key:"value" pair format
 
 tagfmt feature:
 
-- align field tags in part 
+- align field tags in part
 - fill specified tag key to field
 - sort field tags
 
-
-
-## get tagfmt 
+## get tagfmt
 
 you can download from github releases
 
-https://github.com/bigpigeon/tagfmt/releases
+https://github.com/jummyliu/tagfmt/releases
 
-or go get 
+or go install
 
-    go get github.com/bigpigeon/tagfmt
+    go install github.com/jummyliu/tagfmt@latest
 
-## usage 
+## usage
+
 ```
 usage: tagfmt [flags] [path ...]
   -P string
@@ -66,18 +65,17 @@ usage: tagfmt [flags] [path ...]
    "match": "\\.go",
    "isAsync": true,
    "event": "onFileChange",
-   "cmd": "tagfmt -w -f \"json=or(:tag,snake(:field))|yaml=or(:tag,lower_camel(:field))\" ${file} -s -so \"json|yaml\" ${file} " 
+   "cmd": "tagfmt -w -f \"json=or(:tag,snake(:field))|yaml=or(:tag,lower_camel(:field))\" ${file} -s -so \"json|yaml\" ${file} "
 }
-``` 
+```
 
 ![use in vscode](resources/use-in-vscode.gif)
 
-
-## tag align 
+## tag align
 
 align tag according to the longest tag's object of each column
 
-```go 
+```go
 // tagfmt .
 package main
 type Example struct {
@@ -85,9 +83,11 @@ type Example struct {
 	OtherData string `xml:"other_data" json:"other_data:omitempty" yaml:"other_data"`
 }
 ```
+
 the result
+
 ```go
-// tagfmt 
+// tagfmt
 package main
 
 type Example struct {
@@ -98,7 +98,7 @@ type Example struct {
 
 space line or no tag's field will split this rule, just like struct field align by gofmt
 
-```go 
+```go
 //tagfmt
 package main
 type Example struct {
@@ -124,7 +124,8 @@ type Example struct {
 
 tag fill can fill specified key to field tag
 
-e.g 
+e.g
+
 ```
 //tagfmt -f "json=:field"
 
@@ -219,21 +220,21 @@ type OrderDetail struct {
 
 fill rule have many functions and placeholders to avoid writing tags manually
 
-|function | purpose |
-|--------------|---------|
-|upper(s string) | a-z to A-Z
-|lower(s string) | A-Z to a-z
-|snake(s string) | convert upper_camel/lower_camel word to snake case
-|upper_camel(s string) | convert snake case/lower camel case to upper camel case
-|lower_camel(s string) | convert upper camel case/snake case to lower camel case
-|or(s string, s string) | return return first params if it's not zero,else return the second
+| function               | purpose                                                            |
+| ---------------------- | ------------------------------------------------------------------ |
+| upper(s string)        | a-z to A-Z                                                         |
+| lower(s string)        | A-Z to a-z                                                         |
+| snake(s string)        | convert upper_camel/lower_camel word to snake case                 |
+| upper_camel(s string)  | convert snake case/lower camel case to upper camel case            |
+| lower_camel(s string)  | convert upper camel case/snake case to lower camel case            |
+| or(s string, s string) | return return first params if it's not zero,else return the second |
 
-|placeholder | purpose |
-|------------|---------|
-|:field | replace with struct field name
-|:tag   | replace with  struct field existed tag's value
-|:tag_basic | replace with field existed tag's basic value (the value before the first ',' )
-|:tag_extra | replace with field existed tag's extra data (the value after the first ',' )
+| placeholder | purpose                                                                        |
+| ----------- | ------------------------------------------------------------------------------ |
+| :field      | replace with struct field name                                                 |
+| :tag        | replace with struct field existed tag's value                                  |
+| :tag_basic  | replace with field existed tag's basic value (the value before the first ',' ) |
+| :tag_extra  | replace with field existed tag's extra data (the value after the first ',' )   |
 
 ## tag fill with comment filter
 
@@ -257,7 +258,9 @@ type OrderDetail struct {
 }
 
 ```
+
 after format
+
 ```go
 //tagfmt -f "json=snake(:tag)|yaml=lower_camel(:tag)|bson=lower_camel(:tag)|toml=upper_camel(:tag)"
 
@@ -279,7 +282,7 @@ type OrderDetail struct {
 
 ```
 
-## tag sort 
+## tag sort
 
 ```
 //tagfmt -s

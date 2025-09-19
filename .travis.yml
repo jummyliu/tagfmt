@@ -6,7 +6,6 @@ go:
 install:
   - go get -t -v ./...
 
-
 script:
   - go test -coverprofile=coverage.txt -covermode=atomic
   - |
@@ -43,7 +42,7 @@ deploy:
   api_key: $GITHUB_TOKEN
   on:
     tags: true
-    repo: bigpigeon/tagfmt
+    repo: jummyliu/tagfmt
     branch: master
   skip_cleanup: true
   #overwrite: true

@@ -1,4 +1,4 @@
-module github.com/bigpigeon/tagfmt
+module github.com/jummyliu/tagfmt
 
 go 1.13
 
