@@ -6,10 +6,15 @@
 
 package main
 
+import (
+	"strings"
+)
+
 type KeyValue struct {
-	Key   string
-	quote string
-	Value string
+	Key       string
+	quote     string
+	Value     string
+	GormParts []string // 新增字段用于存储 gorm 标签的分割属性
 }
 
 func (kv KeyValue) String() string {
@@ -19,6 +24,28 @@ func (kv KeyValue) String() string {
 		return kv.Key + `:\\"` + kv.Value + `:\\"`
 	} else {
 		panic("invalid quote " + kv.quote)
+	}
+}
+
+// StringWithGormAlign 用于 gorm 标签对齐输出
+func (kv KeyValue) StringWithGormAlign(alignedValue string) string {
+	if kv.quote == "`" {
+		return kv.Key + `:"` + alignedValue + `"`
+	} else if kv.quote == "\"" {
+		return kv.Key + `:\\"` + alignedValue + `:\\"`
+	} else {
+		panic("invalid quote " + kv.quote)
+	}
+}
+
+// ParseGormParts 解析 gorm 标签中的各个部分
+func (kv *KeyValue) ParseGormParts() {
+	if kv.Key == "gorm" {
+		parts := strings.Split(kv.Value, ";")
+		kv.GormParts = make([]string, len(parts))
+		for i, part := range parts {
+			kv.GormParts[i] = strings.TrimSpace(part)
+		}
 	}
 }
 
@@ -83,11 +110,14 @@ func ParseTag(tag string) (quote string, keyValues []KeyValue, err error) {
 		}
 		value := string(tag[quoteLen : i-quoteLen+1])
 
-		keyValues = append(keyValues, KeyValue{
+		kv := KeyValue{
 			Key:   name,
 			Value: value,
 			quote: quote,
-		})
+		}
+		// 如果是 gorm 标签，解析其内部结构
+		kv.ParseGormParts()
+		keyValues = append(keyValues, kv)
 
 		tag = tag[i+1:]
 	}
